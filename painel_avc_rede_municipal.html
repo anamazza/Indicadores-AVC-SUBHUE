@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Qualidade Clínica do AVC · SMS-RJ · SUBHUE</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --blue-900:#2a0a3f; --blue-800:#3d1257; --blue-700:#561a72; --blue-500:#8e2aa0;
+  --blue-200:#d3a9e0; --blue-100:#ecd6f2; --blue-50:#f7eefb;
+  --red:#d81e3f; --red-700:#a01428; --red-100:#f8dde2;
+  --gold:#f2c200; --gold-deep:#c79600;
+  --ink:#1d0f29; --ink-soft:#473351; --mute:#7d6e88;
+  --paper:#f4eff7; --card:#ffffff; --line:#e6dced;
+  --good:#1d7a52; --warn:#b97608; --bad:#d81e3f; --na:#9a8ea5;
+  --shadow:0 1px 2px rgba(42,10,63,.06),0 8px 26px rgba(42,10,63,.10);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-feature-settings:"tnum" 1;line-height:1.5}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.hidden{display:none!important}
+
+/* ---------- HOME ---------- */
+#home{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+  background:radial-gradient(130% 130% at 78% 12%,#7a1f6e 0%,#4a1163 42%,#2a0a3f 100%);color:#f4e9fb;position:relative;overflow:hidden}
+#home .veins{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}
+#home .brain{position:absolute;right:-2%;top:50%;transform:translateY(-50%);height:108%;width:auto;pointer-events:none;z-index:1;opacity:.95}
+#home .inner{position:relative;z-index:2;max-width:1000px;margin:0 auto;padding:56px 24px;width:100%}
+#home .ey{font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:12px}
+#home .ey svg{width:30px;height:30px}
+#home h1{font-size:42px;line-height:1.1;margin:0 0 12px;font-weight:780;letter-spacing:-.02em;max-width:16ch}
+#home h1 .ac{color:var(--gold)}
+#home .lead{font-size:16px;color:#e3d0ef;margin:0 0 40px;max-width:56ch}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px}
+.choice{appearance:none;text-align:left;cursor:pointer;font-family:inherit;
+  background:rgba(255,255,255,.06);border:1px solid rgba(211,169,224,.3);border-radius:18px;padding:26px 24px;color:#f4e9fb;
+  transition:transform .18s,border-color .18s,background .18s;position:relative;overflow:hidden}
+.choice:hover{transform:translateY(-3px);border-color:var(--gold);background:rgba(255,255,255,.1)}
+.choice .ico{width:52px;height:52px;border-radius:13px;display:grid;place-items:center;margin-bottom:18px;
+  background:linear-gradient(140deg,var(--blue-500),var(--blue-700));border:1px solid rgba(255,255,255,.18)}
+.choice .ico svg{width:30px;height:30px;stroke:#fff}
+.choice h2{margin:0 0 4px;font-size:21px;font-weight:720;letter-spacing:-.01em}
+.choice p{margin:0;font-size:13.5px;color:#d8c2e6;line-height:1.45}
+.choice .go{position:absolute;top:24px;right:22px;color:var(--blue-200);font-size:22px;transition:transform .18s,color .18s}
+.choice:hover .go{transform:translateX(4px);color:var(--gold)}
+#home .foot{margin-top:42px;font-size:12px;color:#b89cc9;letter-spacing:.02em}
+
+/* ---------- DASHBOARD SHARED ---------- */
+header.dash{background:linear-gradient(115deg,var(--blue-900),var(--blue-700));color:#f4e9fb;padding:22px 0 24px;border-bottom:3px solid var(--red)}
+.backbtn{appearance:none;font-family:inherit;cursor:pointer;background:rgba(255,255,255,.08);border:1px solid rgba(169,204,232,.3);
+  color:#dcebf9;border-radius:999px;padding:6px 14px 6px 10px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;transition:.15s}
+.backbtn:hover{background:rgba(255,255,255,.16);border-color:#ff5c6e}
+.backbtn svg{width:15px;height:15px}
+.crumb{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue-200);font-weight:600;margin:0 0 9px}
+header.dash h1{font-size:27px;line-height:1.14;margin:0 0 6px;font-weight:750;letter-spacing:-.01em;display:flex;align-items:center;gap:12px}
+header.dash h1 svg{width:30px;height:30px;flex:none}
+header.dash p.sub{margin:0;color:#d8c2e6;font-size:14px;max-width:64ch}
+.meta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;font-size:12.5px;color:#a9c8e6}
+.meta-row b{color:#f4e9fb;font-weight:600}
+
+.yearbar{position:sticky;top:0;z-index:30;background:rgba(241,245,249,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.yearbar .wrap{display:flex;align-items:center;gap:14px;padding:12px 22px}
+.yearbar .lbl{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--ink-soft);
+  padding:7px 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
+.tab:hover{border-color:var(--blue-200)}
+.tab.active{background:var(--blue-700);color:#fff;border-color:var(--blue-700)}
+.tab .nlab{font-size:11px;font-weight:500;opacity:.78;margin-left:5px}
+
+section{padding:30px 0}
+.section-head{display:flex;align-items:baseline;gap:12px;margin:0 0 18px}
+.section-head .num{font-size:12px;font-weight:700;color:var(--red);letter-spacing:.05em}
+.section-head h3{font-size:19px;margin:0;font-weight:700;letter-spacing:-.01em}
+.section-head .hint{margin-left:auto;font-size:12.5px;color:var(--mute)}
+
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.kpi .tag{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--mute);font-weight:600;margin:0 0 5px}
+.kpi .val{font-size:31px;font-weight:760;letter-spacing:-.02em;line-height:1}
+.kpi .val .u{font-size:14px;font-weight:600;color:var(--mute);margin-left:3px}
+.kpi .den{font-size:12px;color:var(--mute);margin-top:6px}
+.kpi .stripe{position:absolute;left:0;top:0;bottom:0;width:4px}
+.stripe.good{background:var(--good)}.stripe.warn{background:var(--warn)}.stripe.bad{background:var(--bad)}.stripe.na{background:var(--na)}.stripe.blue{background:var(--blue-500)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.panel h4{margin:0 0 2px;font-size:15px;font-weight:700}
+.panel .desc{margin:0 0 14px;font-size:12.5px;color:var(--mute)}
+.chart-box{position:relative;height:235px}
+
+.tablecard{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+table.matrix{width:100%;border-collapse:collapse;font-size:13.5px}
+table.matrix thead th{background:var(--blue-800);color:#d8e8f7;text-align:center;padding:11px 10px;font-weight:600;font-size:12px}
+table.matrix thead th:first-child{text-align:left;padding-left:18px}
+table.matrix tbody td{padding:9px 10px;text-align:center;border-top:1px solid var(--line)}
+table.matrix tbody td:first-child{text-align:left;padding-left:18px;font-weight:600}
+table.matrix tbody tr:hover{background:var(--blue-50)}
+.heat{display:inline-block;min-width:58px;padding:4px 8px;border-radius:7px;font-weight:700;font-size:13px;color:#fff}
+.subc{display:block;font-weight:400;font-size:11px;color:var(--mute);margin-top:1px}
+.mlegend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);margin-top:13px}
+.mlegend span{display:inline-flex;align-items:center;gap:6px}
+.mlegend i{width:9px;height:9px;border-radius:2px}
+@media(max-width:820px){.tablecard{overflow-x:auto}table.matrix{min-width:560px}}
+footer{padding:26px 0 40px;color:var(--mute);font-size:12px;border-top:1px solid var(--line);margin-top:8px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media(max-width:820px){.kpis{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.choices{grid-template-columns:1fr}#home h1{font-size:31px}#home .brain{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<!-- ============ HOME ============ -->
+<div id="home">
+  <svg class="veins" id="veins" aria-hidden="true"></svg>
+  <div class="inner">
+    <p class="ey">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ff5c6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+      SMS-RJ · SUBHUE · Linha de Cuidado do AVC
+    </p>
+    <h1>Painel de qualidade clínica do <span class="ac">AVC</span></h1>
+    <p class="lead">Indicadores de reperfusão, tempo, processo e desfecho nas unidades da rede municipal. Escolha a unidade para visualizar.</p>
+
+    <div class="choices">
+      <button class="choice" onclick="openDash('cer')">
+        <div class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M9 21v-5h6v5"/><path d="M12 8v4M10 10h4"/></svg>
+        </div>
+        <span class="go">→</span>
+        <h2>CER Leblon</h2>
+        <p>Coordenação de Emergência Regional do Leblon. Série 2023 a 2026, dados RES-Q.</p>
+      </button>
+
+      <button class="choice" onclick="openDash('pedro')">
+        <div class="ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>
+        </div>
+        <span class="go">→</span>
+        <h2>Hospital Municipal Pedro II</h2>
+        <p>Pacientes em protocolo AVC, projeto ANGELS. 3º e 4º trimestres de 2025.</p>
+      </button>
+    </div>
+
+    <p class="foot">Prefeitura do Rio de Janeiro · Secretaria Municipal de Saúde</p>
+  </div>
+</div>
+
+<!-- ============ CER LEBLON ============ -->
+<div id="dash-cer" class="hidden">
+  <header class="dash">
+    <div class="wrap">
+      <button class="backbtn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Início</button>
+      <p class="crumb">SMS-RJ · SUBHUE · Linha de Cuidado do AVC</p>
+      <h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff5c6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        Qualidade clínica do AVC · CER Leblon
+      </h1>
+      <p class="sub">Coordenação de Emergência Regional do Leblon. Reperfusão e tempos de cuidado, série histórica 2023 a 2026.</p>
+      <div class="meta-row"><span>Fonte: <b>RES-Q</b></span><span><b>495</b> casos (4 anos)</span></div>
+    </div>
+  </header>
+  <nav class="yearbar"><div class="wrap"><span class="lbl">Ano</span><div class="tabs" id="cerTabs"></div></div></nav>
+  <main>
+    <section><div class="wrap">
+      <div class="section-head"><span class="num">01</span><h3>Resumo do ano</h3><span class="hint" id="cerCtx"></span></div>
+      <div class="kpis" id="cerKpis"></div>
+    </div></section>
+    <section style="padding-top:6px"><div class="wrap">
+      <div class="section-head"><span class="num">02</span><h3>Reperfusão e tempo</h3><span class="hint">linha tracejada = meta</span></div>
+      <div class="grid2">
+        <div class="panel"><h4>Trombólise endovenosa (% dos isquêmicos)</h4><p class="desc">Proporção de AVC isquêmicos tratados com trombolítico.</p><div class="chart-box"><canvas id="cerTromb"></canvas></div></div>
+        <div class="panel"><h4>Porta-agulha (mediana, minutos)</h4><p class="desc">Tempo entre chegada e início do trombolítico. Meta abaixo de 60 minutos.</p><div class="chart-box"><canvas id="cerDTN"></canvas></div></div>
+        <div class="panel"><h4>Porta-imagem (mediana, minutos)</h4><p class="desc">Tempo entre chegada e neuroimagem.</p><div class="chart-box"><canvas id="cerDTI"></canvas></div></div>
+        <div class="panel"><h4>Prevenção secundária na alta (%)</h4><p class="desc">Prescrição de antitrombótico e estatina na alta.</p><div class="chart-box"><canvas id="cerPrev"></canvas></div></div>
+      </div>
+    </div></section>
+    <section><div class="wrap">
+      <div class="section-head"><span class="num">03</span><h3>Comparativo entre os anos</h3><span class="hint">valor (numerador / denominador)</span></div>
+      <div class="tablecard">
+        <table class="matrix">
+          <thead><tr><th>Indicador</th><th>Meta</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th></tr></thead>
+          <tbody id="cerMatrix"></tbody>
+        </table>
+      </div>
+      <div class="mlegend">
+        <span><i style="background:var(--good)"></i> dentro da meta</span>
+        <span><i style="background:var(--warn)"></i> atenção</span>
+        <span><i style="background:var(--bad)"></i> abaixo da meta</span>
+      </div>
+    </div></section>
+  </main>
+  <footer><div class="wrap"><span>Qualidade clínica do AVC · CER Leblon · dados RES-Q</span><span>SMS-RJ · SUBHUE · Prefeitura do Rio</span></div></footer>
+</div>
+
+<!-- ============ PEDRO II ============ -->
+<div id="dash-pedro" class="hidden">
+  <header class="dash">
+    <div class="wrap">
+      <button class="backbtn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Início</button>
+      <p class="crumb">SMS-RJ · SUBHUE · Linha de Cuidado do AVC</p>
+      <h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ff5c6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
+        Qualidade clínica do AVC · Hospital Municipal Pedro II
+      </h1>
+      <p class="sub">Pacientes em protocolo AVC, projeto ANGELS. Reperfusão, tempo, processo e desfecho no 3º e 4º trimestres de 2025. Dados anonimizados.</p>
+      <div class="meta-row"><span>Fonte: <b>ANGELS</b></span><span><b>180</b> pacientes</span><span>Período: <b>3º–4º tri 2025</b></span></div>
+    </div>
+  </header>
+  <nav class="yearbar"><div class="wrap"><span class="lbl">Período</span><div class="tabs" id="pedTabs"></div></div></nav>
+  <main>
+    <section><div class="wrap">
+      <div class="section-head"><span class="num">01</span><h3>Resumo do período</h3><span class="hint" id="pedCtx"></span></div>
+      <div class="kpis" id="pedKpis"></div>
+    </div></section>
+    <section style="padding-top:6px"><div class="wrap">
+      <div class="section-head"><span class="num">02</span><h3>Reperfusão e tempo</h3><span class="hint">comparativo entre trimestres</span></div>
+      <div class="grid2">
+        <div class="panel"><h4>Taxa de trombólise (% dos isquêmicos)</h4><p class="desc">Proporção de AVC isquêmicos tratados com trombolítico em cada trimestre.</p><div class="chart-box"><canvas id="pedTromb"></canvas></div></div>
+        <div class="panel"><h4>Porta-agulha (mediana, minutos)</h4><p class="desc">Tempo entre chegada e início do trombolítico. Meta abaixo de 60 minutos.</p><div class="chart-box"><canvas id="pedDTN"></canvas></div></div>
+      </div>
+    </div></section>
+    <section><div class="wrap">
+      <div class="section-head"><span class="num">03</span><h3>Processo de cuidado</h3><span class="hint">rastreio e acesso</span></div>
+      <div class="grid2">
+        <div class="panel"><h4>Rastreio de disfagia (%)</h4><p class="desc">Percentual de pacientes com rastreio de disfagia realizado.</p><div class="chart-box"><canvas id="pedDisf"></canvas></div></div>
+        <div class="panel"><h4>Como o paciente chegou</h4><p class="desc">Via de acesso no período selecionado.</p><div class="chart-box"><canvas id="pedChegou"></canvas></div></div>
+      </div>
+    </div></section>
+    <section><div class="wrap">
+      <div class="section-head"><span class="num">04</span><h3>Desfecho e prevenção na alta</h3><span class="hint" id="pedDesf"></span></div>
+      <div class="grid2">
+        <div class="panel"><h4>Destino após a alta</h4><p class="desc">Distribuição do desfecho no período selecionado.</p><div class="chart-box"><canvas id="pedDest"></canvas></div></div>
+        <div class="panel"><h4>Tratamento prescrito na alta</h4><p class="desc">Registro de prescrição na alta no período selecionado.</p><div class="chart-box"><canvas id="pedTto"></canvas></div></div>
+      </div>
+    </div></section>
+  </main>
+  <footer><div class="wrap"><span>Qualidade clínica do AVC · Hospital Municipal Pedro II · dados ANGELS anonimizados</span><span>SMS-RJ · SUBHUE · Prefeitura do Rio</span></div></footer>
+</div>
+
+<script>
+const COL={blue700:'#561a72',blue500:'#9b2fae',blue200:'#d3a9e0',red:'#d81e3f',gold:'#c79600',good:'#1d7a52',warn:'#b97608',mute:'#9a8ea5',line:'#e6dced'};
+
+/* ---- data ---- */
+const CER={"2023":{"n":88,"isq":24,"tromb_pct":20.8,"tromb_k":5,"tromb_n":24,"dtn_med":73,"dtn_n":4,"dtn45_k":0,"dtn45_n":5,"dtn60_k":0,"dtn60_n":5,"dti_med":70,"at_pct":37.5,"at_k":33,"at_n":88,"st_pct":12.5,"st_k":11,"st_n":88,"obito":4,"mort_pct":4.5},
+"2024":{"n":350,"isq":308,"tromb_pct":7.8,"tromb_k":24,"tromb_n":308,"dtn_med":35,"dtn_n":24,"dtn45_k":17,"dtn45_n":24,"dtn60_k":21,"dtn60_n":24,"dti_med":96,"at_pct":3.6,"at_k":12,"at_n":336,"st_pct":0.9,"st_k":3,"st_n":336,"obito":14,"mort_pct":4.0},
+"2025":{"n":50,"isq":45,"tromb_pct":28.9,"tromb_k":13,"tromb_n":45,"dtn_med":43,"dtn_n":13,"dtn45_k":8,"dtn45_n":13,"dtn60_k":12,"dtn60_n":13,"dti_med":20,"at_pct":54.5,"at_k":24,"at_n":44,"st_pct":0.0,"st_k":0,"st_n":44,"obito":6,"mort_pct":12.0},
+"2026":{"n":7,"isq":7,"tromb_pct":28.6,"tromb_k":2,"tromb_n":7,"dtn_med":50,"dtn_n":2,"dtn45_k":1,"dtn45_n":2,"dtn60_k":1,"dtn60_n":2,"dti_med":11,"at_pct":0.0,"at_k":0,"at_n":7,"st_pct":0.0,"st_k":0,"st_n":7,"obito":0,"mort_pct":0.0}};
+const CER_YEARS=["2023","2024","2025","2026"];
+
+const PED={"Q3":{"n":109,"isq":86,"hem":21,"tromb_k":18,"tromb_n":86,"disf_real":63,"obito":17,"chegou":{"Meios próprios":61,"SAMU":22,"Transferência/UPA":22,"Ambulância":4},"destino":{"Alta/domicílio":42,"Segue internado":6,"Óbito":17,"Outro/sem registro":44},"tto":{"PRESCRITO":43,"OUTRO":46,"ÓBITO":20},"idade_mediana":61,"dtn_med":68,"dtn_n":15,"dtn_le60":5},
+"Q4":{"n":71,"isq":67,"hem":4,"tromb_k":55,"tromb_n":67,"disf_real":71,"obito":11,"chegou":{"Meios próprios":37,"SAMU":31,"Transferência/UPA":3},"destino":{"Alta/domicílio":58,"Segue internado":1,"Óbito":11,"Outro/sem registro":1},"tto":{"PRESCRITO":54,"SEM REGISTRO":17},"idade_mediana":65,"dtn_med":54,"dtn_n":53,"dtn_le60":35},
+"TOTAL":{"n":180,"isq":153,"hem":25,"tromb_k":73,"tromb_n":153,"disf_real":134,"obito":28,"chegou":{"Meios próprios":98,"SAMU":53,"Transferência/UPA":25,"Ambulância":4},"destino":{"Alta/domicílio":100,"Segue internado":7,"Óbito":28,"Outro/sem registro":45},"tto":{"PRESCRITO":97,"OUTRO":46,"SEM REGISTRO":17,"ÓBITO":20},"idade_mediana":62,"dtn_med":57,"dtn_n":68,"dtn_le60":40}};
+const PED_TABS=[["TOTAL","Total 2025"],["Q3","3º trimestre"],["Q4","4º trimestre"]];
+
+const pct=(k,n)=>n?Math.round(100*k/n):0;
+let charts={}, cerBuilt=false, pedBuilt=false, cerYear="2024", pedPer="TOTAL";
+
+/* ---------- navigation ---------- */
+function openDash(which){
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('dash-cer').classList.toggle('hidden', which!=='cer');
+  document.getElementById('dash-pedro').classList.toggle('hidden', which!=='pedro');
+  window.scrollTo(0,0);
+  if(which==='cer' && !cerBuilt){cerTabs();cerKpis();cerCharts();cerMatrix();cerBuilt=true;}
+  if(which==='pedro' && !pedBuilt){pedTabs();pedKpis();pedStatic();pedPeriod();pedBuilt=true;}
+}
+function goHome(){
+  document.getElementById('dash-cer').classList.add('hidden');
+  document.getElementById('dash-pedro').classList.add('hidden');
+  document.getElementById('home').classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+/* ---------- CER ---------- */
+function cerTabs(){
+  document.getElementById('cerTabs').innerHTML=CER_YEARS.map(y=>`<button class="tab ${y===cerYear?'active':''}" data-y="${y}">${y}<span class="nlab">${CER[y].n} casos</span></button>`).join('');
+  document.querySelectorAll('#cerTabs .tab').forEach(b=>b.onclick=()=>{cerYear=b.dataset.y;cerTabs();cerKpis();});
+}
+function cerKpis(){
+  const d=CER[cerYear];
+  document.getElementById('cerCtx').textContent=`${d.n} casos · ${d.isq} isquêmicos`;
+  const tr=d.tromb_pct, dtn=d.dtn_med, d45=pct(d.dtn45_k,d.dtn45_n), mort=d.mort_pct;
+  const cards=[
+    {tag:'Trombólise EV',val:tr+'%',den:`${d.tromb_k} de ${d.tromb_n}`,c:tr>=10?'good':tr>=5?'warn':'bad'},
+    {tag:'Porta-agulha',val:dtn,u:'min',den:`mediana · n=${d.dtn_n}`,c:dtn<=45?'good':dtn<=60?'warn':'bad'},
+    {tag:'Porta-agulha ≤45min',val:d45+'%',den:`${d.dtn45_k} de ${d.dtn45_n}`,c:d45>=50?'good':d45>=25?'warn':'bad'},
+    {tag:'Óbito hospitalar',val:mort+'%',den:`${d.obito} de ${d.n}`,c:mort<=8?'good':mort<=12?'warn':'bad'},
+  ];
+  document.getElementById('cerKpis').innerHTML=cards.map(k=>`<div class="kpi"><div class="stripe ${k.c}"></div><p class="tag">${k.tag}</p><div class="val">${k.val}${k.u?`<span class="u">${k.u}</span>`:''}</div><div class="den">${k.den}</div></div>`).join('');
+}
+function lineOpts(unit,max){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y}${unit||''}`}}},scales:{x:{grid:{display:false},ticks:{font:{size:12}}},y:{beginAtZero:true,max,grid:{color:COL.line},ticks:{font:{size:11},callback:v=>unit==='%'?v+'%':(unit?v+unit:v)}}}};}
+function mkLine(id,vals,color,max,unit,target){
+  const ds=[{data:vals,borderColor:color,backgroundColor:color+'22',fill:true,tension:.25,pointRadius:5,pointBackgroundColor:color,borderWidth:2.5,spanGaps:true}];
+  if(target!=null)ds.push({data:CER_YEARS.map(()=>target),borderColor:COL.gold,borderDash:[6,5],borderWidth:1.5,pointRadius:0,fill:false});
+  charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels:CER_YEARS,datasets:ds},options:lineOpts(unit,max)});
+}
+function cerCharts(){
+  mkLine('cerTromb',CER_YEARS.map(y=>CER[y].tromb_pct),COL.blue700,35,'%',10);
+  mkLine('cerDTN',CER_YEARS.map(y=>CER[y].dtn_med),COL.blue500,90,' min',60);
+  mkLine('cerDTI',CER_YEARS.map(y=>CER[y].dti_med),COL.blue700,110,' min',null);
+  charts.cerPrev=new Chart(document.getElementById('cerPrev'),{type:'bar',
+    data:{labels:CER_YEARS,datasets:[
+      {label:'Antitrombótico',data:CER_YEARS.map(y=>CER[y].at_pct),backgroundColor:COL.blue700,borderRadius:4},
+      {label:'Estatina',data:CER_YEARS.map(y=>CER[y].st_pct),backgroundColor:COL.red,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:60,grid:{color:COL.line},ticks:{callback:v=>v+'%',font:{size:11}}}}}});
+}
+
+/* ---------- CER comparison matrix ---------- */
+function heat(val,kind,suffix){
+  if(val==null) return '<span class="heat" style="background:var(--na)">—</span>';
+  let c='var(--na)';
+  if(kind==='hi') c=val>=10?'var(--good)':val>=5?'var(--warn)':'var(--bad)';
+  else if(kind==='dtn') c=val<=45?'var(--good)':val<=60?'var(--warn)':'var(--bad)';
+  else if(kind==='dti') c=val<=25?'var(--good)':val<=60?'var(--warn)':'var(--bad)';
+  else if(kind==='rate') c=val>=50?'var(--good)':val>=25?'var(--warn)':'var(--bad)';
+  else if(kind==='prev') c=val>=70?'var(--good)':val>=40?'var(--warn)':'var(--bad)';
+  else if(kind==='mort') c=val<=8?'var(--good)':val<=12?'var(--warn)':'var(--bad)';
+  const txt = suffix==='%'? (val%1===0?val:val.toFixed(1))+'%' : (suffix==='min'? val+' min' : val);
+  return `<span class="heat" style="background:${c}">${txt}</span>`;
+}
+function cerMatrix(){
+  const rows=[
+    {lbl:'Trombólise EV',meta:'≥10%',kind:'hi',suf:'%',v:y=>CER[y].tromb_pct,sub:y=>`${CER[y].tromb_k}/${CER[y].tromb_n}`},
+    {lbl:'Porta-agulha',meta:'≤60 min',kind:'dtn',suf:'min',v:y=>CER[y].dtn_med,sub:y=>`n=${CER[y].dtn_n}`},
+    {lbl:'Porta-agulha ≤45 min',meta:'maioria',kind:'rate',suf:'%',v:y=>pct(CER[y].dtn45_k,CER[y].dtn45_n),sub:y=>`${CER[y].dtn45_k}/${CER[y].dtn45_n}`},
+    {lbl:'Porta-agulha ≤60 min',meta:'maioria',kind:'rate',suf:'%',v:y=>pct(CER[y].dtn60_k,CER[y].dtn60_n),sub:y=>`${CER[y].dtn60_k}/${CER[y].dtn60_n}`},
+    {lbl:'Porta-imagem',meta:'≤25 min',kind:'dti',suf:'min',v:y=>CER[y].dti_med,sub:y=>'mediana'},
+    {lbl:'Antitrombótico na alta',meta:'alto',kind:'prev',suf:'%',v:y=>CER[y].at_pct,sub:y=>`${CER[y].at_k}/${CER[y].at_n}`},
+    {lbl:'Estatina na alta',meta:'alto',kind:'prev',suf:'%',v:y=>CER[y].st_pct,sub:y=>`${CER[y].st_k}/${CER[y].st_n}`},
+    {lbl:'Óbito hospitalar',meta:'global',kind:'mort',suf:'%',v:y=>CER[y].mort_pct,sub:y=>`${CER[y].obito}/${CER[y].n}`},
+  ];
+  document.getElementById('cerMatrix').innerHTML=rows.map(r=>`<tr>
+    <td>${r.lbl}</td><td style="color:var(--mute);font-size:12px;font-weight:400">${r.meta}</td>
+    ${CER_YEARS.map(y=>`<td>${heat(r.v(y),r.kind,r.suf)}<span class="subc">${r.sub(y)}</span></td>`).join('')}
+  </tr>`).join('');
+}
+
+/* ---------- PEDRO ---------- */
+function pedTabs(){
+  document.getElementById('pedTabs').innerHTML=PED_TABS.map(([k,l])=>`<button class="tab ${k===pedPer?'active':''}" data-k="${k}">${l}<span class="nlab">${PED[k].n}</span></button>`).join('');
+  document.querySelectorAll('#pedTabs .tab').forEach(b=>b.onclick=()=>{pedPer=b.dataset.k;pedTabs();pedKpis();pedPeriod();});
+}
+function pedKpis(){
+  const d=PED[pedPer];
+  document.getElementById('pedCtx').textContent=`${d.n} pacientes · ${d.isq} isquêmicos · ${d.hem} hemorrágicos · idade mediana ${d.idade_mediana} anos`;
+  const tr=pct(d.tromb_k,d.tromb_n), disf=pct(d.disf_real,d.n), mort=pct(d.obito,d.n);
+  const cards=[
+    {tag:'Trombólise (isquêmicos)',val:tr+'%',den:`${d.tromb_k} de ${d.tromb_n}`,c:tr>=10?'good':'warn'},
+    {tag:'Porta-agulha mediana',val:d.dtn_med,u:'min',den:`n=${d.dtn_n} · ${d.dtn_le60} ≤60min`,c:d.dtn_med<=60?'good':'warn'},
+    {tag:'Rastreio de disfagia',val:disf+'%',den:`${d.disf_real} de ${d.n}`,c:disf>=80?'good':disf>=60?'warn':'bad'},
+    {tag:'Óbito hospitalar',val:mort+'%',den:`${d.obito} de ${d.n}`,c:mort<=8?'good':mort<=12?'warn':'bad'},
+  ];
+  document.getElementById('pedKpis').innerHTML=cards.map(k=>`<div class="kpi"><div class="stripe ${k.c}"></div><p class="tag">${k.tag}</p><div class="val">${k.val}${k.u?`<span class="u">${k.u}</span>`:''}</div><div class="den">${k.den}</div></div>`).join('');
+}
+function pedStatic(){
+  charts.pedTromb=new Chart(document.getElementById('pedTromb'),{type:'bar',
+    data:{labels:['3º tri','4º tri'],datasets:[{data:[pct(PED.Q3.tromb_k,PED.Q3.tromb_n),pct(PED.Q4.tromb_k,PED.Q4.tromb_n)],backgroundColor:[COL.blue500,COL.red],borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:100,grid:{color:COL.line},ticks:{callback:v=>v+'%',font:{size:11}}}}}});
+  charts.pedDTN=new Chart(document.getElementById('pedDTN'),{type:'bar',
+    data:{labels:['3º tri','4º tri'],datasets:[{data:[PED.Q3.dtn_med,PED.Q4.dtn_med],backgroundColor:[COL.blue500,COL.blue700],borderRadius:5},{type:'line',data:[60,60],borderColor:COL.gold,borderDash:[6,5],borderWidth:1.5,pointRadius:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y} min`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:90,grid:{color:COL.line},ticks:{callback:v=>v+' min',font:{size:11}}}}}});
+  charts.pedDisf=new Chart(document.getElementById('pedDisf'),{type:'bar',
+    data:{labels:['3º tri','4º tri','Total'],datasets:[{data:[pct(PED.Q3.disf_real,PED.Q3.n),pct(PED.Q4.disf_real,PED.Q4.n),pct(PED.TOTAL.disf_real,PED.TOTAL.n)],backgroundColor:[COL.blue200,COL.blue700,COL.blue500],borderRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:100,grid:{color:COL.line},ticks:{callback:v=>v+'%',font:{size:11}}}}}});
+}
+function pedPeriod(){
+  const d=PED[pedPer];
+  const cgK=Object.keys(d.chegou),cgV=Object.values(d.chegou),cgC=[COL.blue700,COL.blue200,COL.mute,COL.warn];
+  if(charts.pedChegou)charts.pedChegou.destroy();
+  charts.pedChegou=new Chart(document.getElementById('pedChegou'),{type:'doughnut',
+    data:{labels:cgK,datasets:[{data:cgV,backgroundColor:cgK.map((k,i)=>k==='SAMU'?COL.red:cgC[i%cgC.length]),borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12,padding:8}}}}});
+  const order=['Alta/domicílio','Segue internado','Óbito','Outro/sem registro'];
+  const dK=order.filter(k=>d.destino[k]),dV=dK.map(k=>d.destino[k]);
+  if(charts.pedDest)charts.pedDest.destroy();
+  charts.pedDest=new Chart(document.getElementById('pedDest'),{type:'doughnut',
+    data:{labels:dK,datasets:[{data:dV,backgroundColor:dK.map(k=>k==='Óbito'?COL.red:k==='Alta/domicílio'?COL.blue700:k==='Segue internado'?COL.blue200:COL.mute),borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12,padding:8}}}}});
+  const tOrder=['PRESCRITO','OUTRO','SEM REGISTRO','ÓBITO'],tLbl={'PRESCRITO':'Prescrito','OUTRO':'Outro','SEM REGISTRO':'Sem registro','ÓBITO':'Óbito'};
+  const tK=tOrder.filter(k=>d.tto[k]),tV=tK.map(k=>d.tto[k]);
+  if(charts.pedTto)charts.pedTto.destroy();
+  charts.pedTto=new Chart(document.getElementById('pedTto'),{type:'bar',
+    data:{labels:tK.map(k=>tLbl[k]),datasets:[{data:tV,backgroundColor:tK.map(k=>k==='PRESCRITO'?COL.good:k==='ÓBITO'?COL.red:COL.blue200),borderRadius:5}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x} pacientes`}}},scales:{x:{beginAtZero:true,grid:{color:COL.line},ticks:{font:{size:11},precision:0}},y:{grid:{display:false},ticks:{font:{size:12}}}}}});
+  document.getElementById('pedDesf').textContent=`${d.obito} óbito(s) · ${pct(d.obito,d.n)}% no período`;
+}
+
+/* ---------- malha de vasos cerebrais (inspirada na capa do protocolo) ---------- */
+function growVeins(){
+  const svg=document.getElementById('veins');
+  if(!svg) return;
+  const W=window.innerWidth, H=Math.max(window.innerHeight, svg.clientHeight||0);
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  const ns='http://www.w3.org/2000/svg';
+  function branch(x,y,angle,len,width,depth){
+    if(depth<=0||len<10) return;
+    const x2=x+Math.cos(angle)*len, y2=y+Math.sin(angle)*len;
+    const curve=(Math.random()-0.5)*0.6;
+    const cx=x+Math.cos(angle+curve)*len*0.5, cy=y+Math.sin(angle+curve)*len*0.5;
+    const p=document.createElementNS(ns,'path');
+    p.setAttribute('d',`M${x.toFixed(1)},${y.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`);
+    p.setAttribute('fill','none');
+    p.setAttribute('stroke', depth<=2 ? '#ff7a3c' : (depth<=4 ? '#ffd24d' : '#e3c2ef'));
+    p.setAttribute('stroke-width', Math.max(0.9,width).toFixed(2));
+    p.setAttribute('stroke-linecap','round');
+    p.setAttribute('opacity', (depth<=2 ? 0.22 : depth<=4 ? 0.16 : 0.06+0.012*depth).toFixed(3));
+    svg.appendChild(p);
+    const forks = depth>7 ? 2 : (Math.random()<0.72 ? 2 : 1);
+    for(let i=0;i<forks;i++){
+      const dir = forks===1 ? (Math.random()-0.5) : (i===0?-1:1);
+      const spread = dir*(0.28+Math.random()*0.5);
+      branch(x2,y2,angle+spread,len*(0.74+Math.random()*0.12),width*0.74,depth-1);
+    }
+  }
+  // troncos partindo da borda superior direita, espalhando para baixo e esquerda, como os vasos da capa
+  branch(W*0.93, H*0.04, Math.PI*0.60, H*0.15, 7, 9);
+  branch(W*0.99, H*0.16, Math.PI*0.74, H*0.13, 6, 9);
+  branch(W*0.82, -H*0.01, Math.PI*0.55, H*0.13, 5, 8);
+}
+growVeins();
+let veinTimer;
+window.addEventListener('resize',()=>{clearTimeout(veinTimer);veinTimer=setTimeout(growVeins,200);});
+</script>
+</body>
+</html>
