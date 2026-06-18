@@ -146,7 +146,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
         </div>
         <span class="go">→</span>
         <h2>Hospital Municipal Pedro II</h2>
-        <p>Pacientes em protocolo AVC, projeto ANGELS. 3º e 4º trimestres de 2025.</p>
+        <p>Hospital Municipal Pedro II. Série 2024 a 2026, dados RES-Q.</p>
       </button>
     </div>
 
@@ -211,39 +211,41 @@ footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
         <svg viewBox="0 0 24 24" fill="none" stroke="#ff5c6e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2-6 4 12 2-6h6"/></svg>
         Qualidade clínica do AVC · Hospital Municipal Pedro II
       </h1>
-      <p class="sub">Pacientes em protocolo AVC, projeto ANGELS. Reperfusão, tempo, processo e desfecho no 3º e 4º trimestres de 2025. Dados anonimizados.</p>
-      <div class="meta-row"><span>Fonte: <b>ANGELS</b></span><span><b>180</b> pacientes</span><span>Período: <b>3º–4º tri 2025</b></span></div>
+      <p class="sub">Hospital Municipal Pedro II. Reperfusão e tempos de cuidado, série histórica 2024 a 2026.</p>
+      <div class="meta-row"><span>Fonte: <b>RES-Q</b></span><span><b>347</b> casos (3 anos)</span></div>
     </div>
   </header>
-  <nav class="yearbar"><div class="wrap"><span class="lbl">Período</span><div class="tabs" id="pedTabs"></div></div></nav>
+  <nav class="yearbar"><div class="wrap"><span class="lbl">Ano</span><div class="tabs" id="pedTabs"></div></div></nav>
   <main>
     <section><div class="wrap">
-      <div class="section-head"><span class="num">01</span><h3>Resumo do período</h3><span class="hint" id="pedCtx"></span></div>
+      <div class="section-head"><span class="num">01</span><h3>Resumo do ano</h3><span class="hint" id="pedCtx"></span></div>
       <div class="kpis" id="pedKpis"></div>
     </div></section>
     <section style="padding-top:6px"><div class="wrap">
-      <div class="section-head"><span class="num">02</span><h3>Reperfusão e tempo</h3><span class="hint">comparativo entre trimestres</span></div>
+      <div class="section-head"><span class="num">02</span><h3>Reperfusão e tempo</h3><span class="hint">linha tracejada = meta</span></div>
       <div class="grid2">
-        <div class="panel"><h4>Taxa de trombólise (% dos isquêmicos)</h4><p class="desc">Proporção de AVC isquêmicos tratados com trombolítico em cada trimestre.</p><div class="chart-box"><canvas id="pedTromb"></canvas></div></div>
+        <div class="panel"><h4>Trombólise endovenosa (% dos isquêmicos)</h4><p class="desc">Proporção de AVC isquêmicos tratados com trombolítico.</p><div class="chart-box"><canvas id="pedTromb"></canvas></div></div>
         <div class="panel"><h4>Porta-agulha (mediana, minutos)</h4><p class="desc">Tempo entre chegada e início do trombolítico. Meta abaixo de 60 minutos.</p><div class="chart-box"><canvas id="pedDTN"></canvas></div></div>
+        <div class="panel"><h4>Porta-imagem (mediana, minutos)</h4><p class="desc">Tempo entre chegada e neuroimagem.</p><div class="chart-box"><canvas id="pedDTI"></canvas></div></div>
+        <div class="panel"><h4>Prevenção secundária na alta (%)</h4><p class="desc">Prescrição de antitrombótico e estatina na alta.</p><div class="chart-box"><canvas id="pedPrev"></canvas></div></div>
       </div>
     </div></section>
     <section><div class="wrap">
-      <div class="section-head"><span class="num">03</span><h3>Processo de cuidado</h3><span class="hint">rastreio e acesso</span></div>
-      <div class="grid2">
-        <div class="panel"><h4>Rastreio de disfagia (%)</h4><p class="desc">Percentual de pacientes com rastreio de disfagia realizado.</p><div class="chart-box"><canvas id="pedDisf"></canvas></div></div>
-        <div class="panel"><h4>Como o paciente chegou</h4><p class="desc">Via de acesso no período selecionado.</p><div class="chart-box"><canvas id="pedChegou"></canvas></div></div>
+      <div class="section-head"><span class="num">03</span><h3>Comparativo entre os anos</h3><span class="hint">valor (numerador / denominador)</span></div>
+      <div class="tablecard">
+        <table class="matrix">
+          <thead><tr><th>Indicador</th><th>Meta</th><th>2024</th><th>2025</th><th>2026</th></tr></thead>
+          <tbody id="pedMatrix"></tbody>
+        </table>
       </div>
-    </div></section>
-    <section><div class="wrap">
-      <div class="section-head"><span class="num">04</span><h3>Desfecho e prevenção na alta</h3><span class="hint" id="pedDesf"></span></div>
-      <div class="grid2">
-        <div class="panel"><h4>Destino após a alta</h4><p class="desc">Distribuição do desfecho no período selecionado.</p><div class="chart-box"><canvas id="pedDest"></canvas></div></div>
-        <div class="panel"><h4>Tratamento prescrito na alta</h4><p class="desc">Registro de prescrição na alta no período selecionado.</p><div class="chart-box"><canvas id="pedTto"></canvas></div></div>
+      <div class="mlegend">
+        <span><i style="background:var(--good)"></i> dentro da meta</span>
+        <span><i style="background:var(--warn)"></i> atenção</span>
+        <span><i style="background:var(--bad)"></i> abaixo da meta</span>
       </div>
     </div></section>
   </main>
-  <footer><div class="wrap"><span>Qualidade clínica do AVC · Hospital Municipal Pedro II · dados ANGELS anonimizados</span><span>SMS-RJ · SUBHUE · Prefeitura do Rio</span></div></footer>
+  <footer><div class="wrap"><span>Qualidade clínica do AVC · Hospital Municipal Pedro II · dados RES-Q</span><span>SMS-RJ · SUBHUE · Prefeitura do Rio</span></div></footer>
 </div>
 
 <script>
@@ -256,13 +258,13 @@ const CER={"2023":{"n":88,"isq":24,"tromb_pct":20.8,"tromb_k":5,"tromb_n":24,"dt
 "2026":{"n":7,"isq":7,"tromb_pct":28.6,"tromb_k":2,"tromb_n":7,"dtn_med":50,"dtn_n":2,"dtn45_k":1,"dtn45_n":2,"dtn60_k":1,"dtn60_n":2,"dti_med":11,"at_pct":0.0,"at_k":0,"at_n":7,"st_pct":0.0,"st_k":0,"st_n":7,"obito":0,"mort_pct":0.0}};
 const CER_YEARS=["2023","2024","2025","2026"];
 
-const PED={"Q3":{"n":109,"isq":86,"hem":21,"tromb_k":18,"tromb_n":86,"disf_real":63,"obito":17,"chegou":{"Meios próprios":61,"SAMU":22,"Transferência/UPA":22,"Ambulância":4},"destino":{"Alta/domicílio":42,"Segue internado":6,"Óbito":17,"Outro/sem registro":44},"tto":{"PRESCRITO":43,"OUTRO":46,"ÓBITO":20},"idade_mediana":61,"dtn_med":68,"dtn_n":15,"dtn_le60":5},
-"Q4":{"n":71,"isq":67,"hem":4,"tromb_k":55,"tromb_n":67,"disf_real":71,"obito":11,"chegou":{"Meios próprios":37,"SAMU":31,"Transferência/UPA":3},"destino":{"Alta/domicílio":58,"Segue internado":1,"Óbito":11,"Outro/sem registro":1},"tto":{"PRESCRITO":54,"SEM REGISTRO":17},"idade_mediana":65,"dtn_med":54,"dtn_n":53,"dtn_le60":35},
-"TOTAL":{"n":180,"isq":153,"hem":25,"tromb_k":73,"tromb_n":153,"disf_real":134,"obito":28,"chegou":{"Meios próprios":98,"SAMU":53,"Transferência/UPA":25,"Ambulância":4},"destino":{"Alta/domicílio":100,"Segue internado":7,"Óbito":28,"Outro/sem registro":45},"tto":{"PRESCRITO":97,"OUTRO":46,"SEM REGISTRO":17,"ÓBITO":20},"idade_mediana":62,"dtn_med":57,"dtn_n":68,"dtn_le60":40}};
-const PED_TABS=[["TOTAL","Total 2025"],["Q3","3º trimestre"],["Q4","4º trimestre"]];
+const PED={"2024":{"n":54,"isq":45,"tromb_pct":60.0,"tromb_k":27,"tromb_n":45,"dtn_med":53,"dtn_n":25,"dtn45_k":11,"dtn45_n":27,"dtn60_k":18,"dtn60_n":27,"dti_med":20,"at_pct":51.2,"at_k":22,"at_n":43,"st_pct":51.2,"st_k":22,"st_n":43,"obito":11,"mort_pct":20.4},
+"2025":{"n":250,"isq":215,"tromb_pct":39.5,"tromb_k":85,"tromb_n":215,"dtn_med":51,"dtn_n":76,"dtn45_k":37,"dtn45_n":85,"dtn60_k":57,"dtn60_n":85,"dti_med":16,"at_pct":67.7,"at_k":128,"at_n":189,"st_pct":26.5,"st_k":50,"st_n":189,"obito":61,"mort_pct":24.4},
+"2026":{"n":43,"isq":42,"tromb_pct":88.1,"tromb_k":37,"tromb_n":42,"dtn_med":49,"dtn_n":37,"dtn45_k":17,"dtn45_n":37,"dtn60_k":31,"dtn60_n":37,"dti_med":17,"at_pct":97.4,"at_k":38,"at_n":39,"st_pct":0.0,"st_k":0,"st_n":39,"obito":4,"mort_pct":9.3}};
+const PED_YEARS=["2024","2025","2026"];
 
 const pct=(k,n)=>n?Math.round(100*k/n):0;
-let charts={}, cerBuilt=false, pedBuilt=false, cerYear="2024", pedPer="TOTAL";
+let charts={}, cerBuilt=false, pedBuilt=false, cerYear="2024", pedYear="2025";
 
 /* ---------- navigation ---------- */
 function openDash(which){
@@ -271,7 +273,7 @@ function openDash(which){
   document.getElementById('dash-pedro').classList.toggle('hidden', which!=='pedro');
   window.scrollTo(0,0);
   if(which==='cer' && !cerBuilt){cerTabs();cerKpis();cerCharts();cerMatrix();cerBuilt=true;}
-  if(which==='pedro' && !pedBuilt){pedTabs();pedKpis();pedStatic();pedPeriod();pedBuilt=true;}
+  if(which==='pedro' && !pedBuilt){pedTabs();pedKpis();pedCharts();pedMatrix();pedBuilt=true;}
 }
 function goHome(){
   document.getElementById('dash-cer').classList.add('hidden');
@@ -345,54 +347,54 @@ function cerMatrix(){
   </tr>`).join('');
 }
 
-/* ---------- PEDRO ---------- */
+/* ---------- PEDRO II ---------- */
 function pedTabs(){
-  document.getElementById('pedTabs').innerHTML=PED_TABS.map(([k,l])=>`<button class="tab ${k===pedPer?'active':''}" data-k="${k}">${l}<span class="nlab">${PED[k].n}</span></button>`).join('');
-  document.querySelectorAll('#pedTabs .tab').forEach(b=>b.onclick=()=>{pedPer=b.dataset.k;pedTabs();pedKpis();pedPeriod();});
+  document.getElementById('pedTabs').innerHTML=PED_YEARS.map(y=>`<button class="tab ${y===pedYear?'active':''}" data-y="${y}">${y}<span class="nlab">${PED[y].n} casos</span></button>`).join('');
+  document.querySelectorAll('#pedTabs .tab').forEach(b=>b.onclick=()=>{pedYear=b.dataset.y;pedTabs();pedKpis();});
 }
 function pedKpis(){
-  const d=PED[pedPer];
-  document.getElementById('pedCtx').textContent=`${d.n} pacientes · ${d.isq} isquêmicos · ${d.hem} hemorrágicos · idade mediana ${d.idade_mediana} anos`;
-  const tr=pct(d.tromb_k,d.tromb_n), disf=pct(d.disf_real,d.n), mort=pct(d.obito,d.n);
+  const d=PED[pedYear];
+  document.getElementById('pedCtx').textContent=`${d.n} casos · ${d.isq} isquêmicos`;
+  const tr=d.tromb_pct, dtn=d.dtn_med, d45=pct(d.dtn45_k,d.dtn45_n), mort=d.mort_pct;
   const cards=[
-    {tag:'Trombólise (isquêmicos)',val:tr+'%',den:`${d.tromb_k} de ${d.tromb_n}`,c:tr>=10?'good':'warn'},
-    {tag:'Porta-agulha mediana',val:d.dtn_med,u:'min',den:`n=${d.dtn_n} · ${d.dtn_le60} ≤60min`,c:d.dtn_med<=60?'good':'warn'},
-    {tag:'Rastreio de disfagia',val:disf+'%',den:`${d.disf_real} de ${d.n}`,c:disf>=80?'good':disf>=60?'warn':'bad'},
+    {tag:'Trombólise EV',val:tr+'%',den:`${d.tromb_k} de ${d.tromb_n}`,c:tr>=10?'good':tr>=5?'warn':'bad'},
+    {tag:'Porta-agulha',val:dtn,u:'min',den:`mediana · n=${d.dtn_n}`,c:dtn<=45?'good':dtn<=60?'warn':'bad'},
+    {tag:'Porta-agulha ≤45min',val:d45+'%',den:`${d.dtn45_k} de ${d.dtn45_n}`,c:d45>=50?'good':d45>=25?'warn':'bad'},
     {tag:'Óbito hospitalar',val:mort+'%',den:`${d.obito} de ${d.n}`,c:mort<=8?'good':mort<=12?'warn':'bad'},
   ];
   document.getElementById('pedKpis').innerHTML=cards.map(k=>`<div class="kpi"><div class="stripe ${k.c}"></div><p class="tag">${k.tag}</p><div class="val">${k.val}${k.u?`<span class="u">${k.u}</span>`:''}</div><div class="den">${k.den}</div></div>`).join('');
 }
-function pedStatic(){
-  charts.pedTromb=new Chart(document.getElementById('pedTromb'),{type:'bar',
-    data:{labels:['3º tri','4º tri'],datasets:[{data:[pct(PED.Q3.tromb_k,PED.Q3.tromb_n),pct(PED.Q4.tromb_k,PED.Q4.tromb_n)],backgroundColor:[COL.blue500,COL.red],borderRadius:5}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:100,grid:{color:COL.line},ticks:{callback:v=>v+'%',font:{size:11}}}}}});
-  charts.pedDTN=new Chart(document.getElementById('pedDTN'),{type:'bar',
-    data:{labels:['3º tri','4º tri'],datasets:[{data:[PED.Q3.dtn_med,PED.Q4.dtn_med],backgroundColor:[COL.blue500,COL.blue700],borderRadius:5},{type:'line',data:[60,60],borderColor:COL.gold,borderDash:[6,5],borderWidth:1.5,pointRadius:0}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y} min`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:90,grid:{color:COL.line},ticks:{callback:v=>v+' min',font:{size:11}}}}}});
-  charts.pedDisf=new Chart(document.getElementById('pedDisf'),{type:'bar',
-    data:{labels:['3º tri','4º tri','Total'],datasets:[{data:[pct(PED.Q3.disf_real,PED.Q3.n),pct(PED.Q4.disf_real,PED.Q4.n),pct(PED.TOTAL.disf_real,PED.TOTAL.n)],backgroundColor:[COL.blue200,COL.blue700,COL.blue500],borderRadius:5}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.y}%`}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:100,grid:{color:COL.line},ticks:{callback:v=>v+'%',font:{size:11}}}}}});
+function mkLineY(id,years,vals,color,max,unit,target){
+  const ds=[{data:vals,borderColor:color,backgroundColor:color+'22',fill:true,tension:.25,pointRadius:5,pointBackgroundColor:color,borderWidth:2.5,spanGaps:true}];
+  if(target!=null)ds.push({data:years.map(()=>target),borderColor:COL.gold,borderDash:[6,5],borderWidth:1.5,pointRadius:0,fill:false});
+  charts[id]=new Chart(document.getElementById(id),{type:'line',data:{labels:years,datasets:ds},options:lineOpts(unit,max)});
 }
-function pedPeriod(){
-  const d=PED[pedPer];
-  const cgK=Object.keys(d.chegou),cgV=Object.values(d.chegou),cgC=[COL.blue700,COL.blue200,COL.mute,COL.warn];
-  if(charts.pedChegou)charts.pedChegou.destroy();
-  charts.pedChegou=new Chart(document.getElementById('pedChegou'),{type:'doughnut',
-    data:{labels:cgK,datasets:[{data:cgV,backgroundColor:cgK.map((k,i)=>k==='SAMU'?COL.red:cgC[i%cgC.length]),borderWidth:2,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12,padding:8}}}}});
-  const order=['Alta/domicílio','Segue internado','Óbito','Outro/sem registro'];
-  const dK=order.filter(k=>d.destino[k]),dV=dK.map(k=>d.destino[k]);
-  if(charts.pedDest)charts.pedDest.destroy();
-  charts.pedDest=new Chart(document.getElementById('pedDest'),{type:'doughnut',
-    data:{labels:dK,datasets:[{data:dV,backgroundColor:dK.map(k=>k==='Óbito'?COL.red:k==='Alta/domicílio'?COL.blue700:k==='Segue internado'?COL.blue200:COL.mute),borderWidth:2,borderColor:'#fff'}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12,padding:8}}}}});
-  const tOrder=['PRESCRITO','OUTRO','SEM REGISTRO','ÓBITO'],tLbl={'PRESCRITO':'Prescrito','OUTRO':'Outro','SEM REGISTRO':'Sem registro','ÓBITO':'Óbito'};
-  const tK=tOrder.filter(k=>d.tto[k]),tV=tK.map(k=>d.tto[k]);
-  if(charts.pedTto)charts.pedTto.destroy();
-  charts.pedTto=new Chart(document.getElementById('pedTto'),{type:'bar',
-    data:{labels:tK.map(k=>tLbl[k]),datasets:[{data:tV,backgroundColor:tK.map(k=>k==='PRESCRITO'?COL.good:k==='ÓBITO'?COL.red:COL.blue200),borderRadius:5}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.parsed.x} pacientes`}}},scales:{x:{beginAtZero:true,grid:{color:COL.line},ticks:{font:{size:11},precision:0}},y:{grid:{display:false},ticks:{font:{size:12}}}}}});
-  document.getElementById('pedDesf').textContent=`${d.obito} óbito(s) · ${pct(d.obito,d.n)}% no período`;
+function pedCharts(){
+  mkLineY('pedTromb',PED_YEARS,PED_YEARS.map(y=>PED[y].tromb_pct),COL.blue700,100,'%',10);
+  mkLineY('pedDTN',PED_YEARS,PED_YEARS.map(y=>PED[y].dtn_med),COL.blue500,90,' min',60);
+  mkLineY('pedDTI',PED_YEARS,PED_YEARS.map(y=>PED[y].dti_med),COL.blue700,60,' min',null);
+  charts.pedPrev=new Chart(document.getElementById('pedPrev'),{type:'bar',
+    data:{labels:PED_YEARS,datasets:[
+      {label:'Antitrombótico',data:PED_YEARS.map(y=>PED[y].at_pct),backgroundColor:COL.blue700,borderRadius:4},
+      {label:'Estatina',data:PED_YEARS.map(y=>PED[y].st_pct),backgroundColor:COL.red,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12,padding:12}},tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y}%`}}},
+      scales:{x:{grid:{display:false}},y:{beginAtZero:true,max:100,grid:{color:COL.line},ticks:{callback:v=>v+'%',font:{size:11}}}}}});
+}
+function pedMatrix(){
+  const rows=[
+    {lbl:'Trombólise EV',meta:'≥10%',kind:'hi',suf:'%',v:y=>PED[y].tromb_pct,sub:y=>`${PED[y].tromb_k}/${PED[y].tromb_n}`},
+    {lbl:'Porta-agulha',meta:'≤60 min',kind:'dtn',suf:'min',v:y=>PED[y].dtn_med,sub:y=>`n=${PED[y].dtn_n}`},
+    {lbl:'Porta-agulha ≤45 min',meta:'maioria',kind:'rate',suf:'%',v:y=>pct(PED[y].dtn45_k,PED[y].dtn45_n),sub:y=>`${PED[y].dtn45_k}/${PED[y].dtn45_n}`},
+    {lbl:'Porta-agulha ≤60 min',meta:'maioria',kind:'rate',suf:'%',v:y=>pct(PED[y].dtn60_k,PED[y].dtn60_n),sub:y=>`${PED[y].dtn60_k}/${PED[y].dtn60_n}`},
+    {lbl:'Porta-imagem',meta:'≤25 min',kind:'dti',suf:'min',v:y=>PED[y].dti_med,sub:y=>'mediana'},
+    {lbl:'Antitrombótico na alta',meta:'alto',kind:'prev',suf:'%',v:y=>PED[y].at_pct,sub:y=>`${PED[y].at_k}/${PED[y].at_n}`},
+    {lbl:'Estatina na alta',meta:'alto',kind:'prev',suf:'%',v:y=>PED[y].st_pct,sub:y=>`${PED[y].st_k}/${PED[y].st_n}`},
+    {lbl:'Óbito hospitalar',meta:'global',kind:'mort',suf:'%',v:y=>PED[y].mort_pct,sub:y=>`${PED[y].obito}/${PED[y].n}`},
+  ];
+  document.getElementById('pedMatrix').innerHTML=rows.map(r=>`<tr>
+    <td>${r.lbl}</td><td style="color:var(--mute);font-size:12px;font-weight:400">${r.meta}</td>
+    ${PED_YEARS.map(y=>`<td>${heat(r.v(y),r.kind,r.suf)}<span class="subc">${r.sub(y)}</span></td>`).join('')}
+  </tr>`).join('');
 }
 
 /* ---------- malha de vasos cerebrais (inspirada na capa do protocolo) ---------- */
@@ -434,3 +436,4 @@ window.addEventListener('resize',()=>{clearTimeout(veinTimer);veinTimer=setTimeo
 </script>
 </body>
 </html>
+
